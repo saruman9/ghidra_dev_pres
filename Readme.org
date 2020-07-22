@@ -1,0 +1,196 @@
+#+STARTUP: indent
+#+STARTUP: noinlineimages
+
+#+OPTIONS: reveal_mathjax:t
+#+OPTIONS: reveal_slide_number:c/t
+#+OPTIONS: reveal_history:t
+#+OPTIONS: toc:nil
+# #+OPTIONS: num:nil
+#+REVEAL_HLEVEL: 2
+#+REVEAL_TRANS: linear
+#+REVEAL_TITLE_SLIDE:<h1>%t</h1><p>%a</p><p><a href="https://t.me/dura_lex">@dura_lex</a></p>
+#+REVEAL_TITLE_SLIDE_BACKGROUND:./images/ghidra_main.png
+#+REVEAL_TITLE_SLIDE_BACKGROUND_SIZE: 50%
+#+REVEAL_THEME: night
+#+REVEAL_EXTRA_CSS: override.css
+
+#+TITLE: Ghidra. Dev
+#+AUTHOR: Abc Xyz
+#+EMAIL: @dura_lex
+
+* Table of Contents
+:PROPERTIES:
+:UNNUMBERED: notoc
+:END:
+
+#+REVEAL_TOC: headlines 1
+
+* Introduction
+** About Ghidra
+
+- Integrated environment for software reverse engineering (IDE for SRE)
+- Developed by NSA Research
+- Written almost entirely in Java
+- Some native code (C/C++)
+
+** Major parts
+*** Programs
+
+- ELF
+- PE
+- Mach-O
+- COFF
+- PDB
+- Raw binaries
+- etc
+
+*** Project Manager
+
+#+ATTR_HTML: :width 20%
+[[./images/project_manager.png]]
+
+*** Tools
+
+#+ATTR_HTML: :width 30%
+[[./images/tool_chest.png]]
+
+#+REVEAL: split
+
+#+ATTR_HTML: :width 90%
+[[./images/tool.png]]
+
+*** Plugins
+
+#+REVEAL_HTML: <div class="column" style="float:left; width: 50%">
+[[./images/plugins_configure.png]]
+#+REVEAL_HTML: </div>
+
+#+REVEAL_HTML: <div class="column" style="float:left; width: 50%">
+[[./images/plugins_core.png]]
+#+REVEAL_HTML: </div>
+
+*** Scripts
+
+#+ATTR_HTML: :width 90%
+[[./images/scripts.png]]
+
+*** Server
+
+- Multiple users work together on the same program(s)
+- Network storage for the shared project
+- Controls user access
+- Allows files to be versioned (à la primitive Git)
+- Others features
+
+** Why use Ghidra?
+
+- Designed to handle large data sets (not large binaries!)
+- Supports collaboration
+- Highly configurable environment
+- Highly extensible via plugins and scripts
+- Multi-platform (Linux, Mac, Windows, FreeBSD, Haiku, etc)
+
+* IDE for developing (+Eclipse+ IntelliJ IDEA)
+
+** Why not Eclipse
+
+Not to my taste, but...
+
+- GhidraDev plugin (extensions and scripts developing)
+- GhidraSleighEditor plugin (Sleigh linter)
+
+** My alternatives
+
+#+ATTR_REVEAL: :frag (appear)
+- Emacs (Eclipse backend)?
+- VIM (Eclipse backend)?
+- IntelliJ IDEA (Community Edition) ✓
+
+** Integrate with Ghidra
+*** Plugins
+
+- Use default =Skeleton= project
+
+  Copy =Skeleton='s directory (or yours prepared extension) to needed location
+
+#+REVEAL: split
+
+- Create the project
+
+  - =File= → =New= → =Project from Existing Sources...= (use Gradle model)
+  - Choose the directory
+
+#+REVEAL: split
+
+- Set =gradle='s environment (=GHIDRA_INSTALL_DIR=)
+
+  - Set in the /Run/Debug Configurations/ (Gradle)
+  - Create =gradle.properties= file and set the environment:
+
+    #+BEGIN_SRC gradle
+    GHIDRA_INSTALL_DIR = /home/user/ghidra
+    #+END_SRC
+
+#+REVEAL: split
+
+Point to the directory of sources of Ghidra, when it will be needed
+
+[[./images/idea_ghidra_sources.png]]
+
+*** Scripts
+
+- Create or use existing the =ghidra_scripts= directory
+- Use existing =HelloWorldScript= script as a template
+
+  =${GHIDRA_HOME}/Ghidra/Features/Base/ghidra_scripts/HelloWorldScript.java=
+
+#+REVEAL: split
+
+- Import the directory as Existing Sources without models
+
+#+REVEAL: split
+
+- Add Ghidra as module to the project:
+
+  - Open the Project Structure (=F4= hotkey in the Project window)
+  - Select the Modules item
+  - Import Module (select the directory of sources of Ghidra)
+
+    #+ATTR_HTML: :width 30%
+    [[./images/idea_import_module.png]]
+
+#+REVEAL: split
+
+- Wait while IntelliJ IDEA indexes Ghidra's files
+- Add module dependencies via the Context Actions
+
+  [[./images/idea_module_dep.png]]
+
+- Also you can add templates/snippets for scripts
+
+** Debug
+
+** Ghidra developing
+
+* Development
+
+** Extension Point
+
+** Extension source tree
+
+* API
+** Flat API
+** Program API
+
+* Scripting
+* Headless scripting
+* Plugins
+* Docking windows
+* Component Provider
+* Binary Formats
+* Analyzers
+* Loaders
+* File System Loaders
+* Sleigh
+* Build extension
+* Contributing to Ghidra
