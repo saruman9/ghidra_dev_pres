@@ -106,7 +106,7 @@ Not to my taste, but...
 - VIM (Eclipse backend)?
 - IntelliJ IDEA (Community Edition) ✓
 
-** Integrate with Ghidra
+** Integrate with Ghidra (Linux)
 *** Plugins
 
 - Use default =Skeleton= project
@@ -124,7 +124,7 @@ Not to my taste, but...
 
 - Set =gradle='s environment (=GHIDRA_INSTALL_DIR=)
 
-  - Set in the /Run/Debug Configurations/ (Gradle)
+  - Set in /Run/Debug Configurations/ (Gradle)
   - Create =gradle.properties= file and set the environment:
 
     #+BEGIN_SRC gradle
@@ -152,8 +152,8 @@ Point to the directory of sources of Ghidra, when it will be needed
 
 - Add Ghidra as module to the project:
 
-  - Open the Project Structure (=F4= hotkey in the Project window)
-  - Select the Modules item
+  - Open Project Structure (=F4= hotkey in Project window)
+  - Select Modules item
   - Import Module (select the directory of sources of Ghidra)
 
     #+ATTR_HTML: :width 30%
@@ -162,7 +162,7 @@ Point to the directory of sources of Ghidra, when it will be needed
 #+REVEAL: split
 
 - Wait while IntelliJ IDEA indexes Ghidra's files
-- Add module dependencies via the Context Actions
+- Add module dependencies via Context Actions
 
   [[./images/idea_module_dep.png]]
 
@@ -170,13 +170,230 @@ Point to the directory of sources of Ghidra, when it will be needed
 
 ** Debug
 
+#+ATTR_REVEAL: :frag (appear)
+- Run Ghidra in Debug mode
+
+  #+BEGIN_SRC sh
+  $ /opt/ghidra/support/ghidraDebug
+  #+END_SRC
+
+- Attach to Process...
+
+  [[./images/idea_attach_to_process.png]]
+
+- Debug a script/plugin
+
 ** Ghidra developing
+
+#+ATTR_REVEAL: :frag (appear)
+- Clone the repository
+
+  #+BEGIN_SRC sh
+  $ git clone https://github.com/NationalSecurityAgency/ghidra
+  #+END_SRC
+
+- Build Ghidra (see =DevGuide.md= for details)
+
+  #+BEGIN_SRC sh
+  $ gradle --init-script gradle/support/fetchDependencies.gradle init
+  $ gradle buildGhidra
+  #+END_SRC
+
+#+REVEAL: split
+
+- Create the project from Existing Sources (Gradle model)
+#+ATTR_REVEAL: :frag (appear)
+- For testing of patches or new features you can use features of IntelliJ IDEA
+  or Linux tools (=sed=, =inotify=, =(bsd)tar=, etc)
+
+#+REVEAL: split
+
+Skip Gralde's tasks for faster building (use =-x= argument):
+
+- =createJavadocs=
+- =createJsondocs=
+- =sleighCompile=
+- etc
 
 * Development
 
 ** Extension Point
 
+Every piece (Plugins, Scripts, Analyzers, Fields, Importers, Exporters, etc) of
+Ghidra is extensible!
+
+Extensible components:
+- =ExtensionPoint= interface
+- List suffix in =ExtensionPoint.manifest=
+
 ** Extension source tree
+
+#+ATTR_HTML: :width 25%
+[[./images/extension_structure.png]]
+
+*** =src=
+
+#+BEGIN_SRC
+./src
+├── main
+│  ├── help
+│  │  └── help
+│  │     ├── shared
+│  │     │  └── Frontpage.css
+│  │     ├── topics
+│  │     │  └── skeleton
+│  │     │     └── help.html
+│  │     └── TOC_Source.xml
+│  ├── java
+│  │  └── skeleton
+│  │     ├── SkeletonAnalyzer.java
+│  │     ├── SkeletonExporter.java
+│  │     ├── SkeletonFileSystem.java
+│  │     ├── SkeletonLoader.java
+│  │     └── SkeletonPlugin.java
+│  └── resources
+│     └── images
+└── test
+   └── java
+#+END_SRC
+
+#+REVEAL: split
+
+#+BEGIN_SRC
+./src/main
+├── java
+│  └── skeleton
+│     ├── SkeletonAnalyzer.java
+│     ├── SkeletonExporter.java
+│     ├── SkeletonFileSystem.java
+│     ├── SkeletonLoader.java
+│     └── SkeletonPlugin.java
+└── resources
+   └── images
+#+END_SRC
+
+- Packaged into a =.jar= file
+- Hold the Java/Clojure/Kotlin/JVM-based source for this extension
+
+#+REVEAL: split
+
+#+BEGIN_SRC
+./src/test
+└── java
+#+END_SRC
+
+- Unit tests are not included in the =.jar= file
+
+#+REVEAL: split
+
+#+BEGIN_SRC
+./src/main/help
+└── help
+   ├── shared
+   │  └── Frontpage.css
+   ├── topics
+   │  └── skeleton
+   │     └── help.html
+   └── TOC_Source.xml
+#+END_SRC
+
+- Online help for this extension
+- Contains the table of contents to append
+- Contains the CSS and HTML components
+
+*** =ghidra_scripts=
+
+#+BEGIN_SRC
+./ghidra_scripts
+#+END_SRC
+
+- Holds scripts for this extension
+- Unpacked as source to the file system on installation
+- May provide examples to use an extension's API
+
+*** =data=
+
+#+BEGIN_SRC
+./data
+├── languages
+│  ├── skel.cspec
+│  ├── skel.ldefs
+│  ├── skel.opinion
+│  ├── skel.pspec
+│  ├── skel.sinc
+│  └── skel.slaspec
+├── buildLanguage.xml
+└── sleighArgs.txt
+#+END_SRC
+
+- Holds data files for this extension
+- Will not end up inside the =.jar= file
+- Will be present in the distribution =.zip= file
+- Unpacked to the file system on installation
+
+*** =lib=
+
+#+BEGIN_SRC
+./lib
+#+END_SRC
+
+- Holds external Java dependencies for this extension
+- When working in IntelliJ IDEA, the contents of this directory should be added
+  by Gradle's task
+
+*** =os=
+
+#+BEGIN_SRC
+./os
+├── linux64
+├── osx64
+└── win64
+#+END_SRC
+
+- Holds native components for this extension
+- NEVER EVER USE JNI! Communicate with a native process using sockets, I/O,
+  stream, etc
+
+*** Other
+
+#+BEGIN_SRC
+.
+├── build.gradle
+├── extension.properties
+└── Module.manifest
+#+END_SRC
+
+#+REVEAL: split
+
+=build.gradle=
+
+Gralde's task. No need for changes
+
+#+REVEAL: split
+
+=extension.properties=
+
+#+BEGIN_SRC
+name=@extname@
+description=The extension description.
+author=
+createdOn=
+version=@extversion@
+#+END_SRC
+
+#+REVEAL: split
+
+=Module.manifest=
+
+#+BEGIN_SRC
+MODULE NAME:
+MODULE DEPENDENCY:
+MODULE FILE LICENSE:
+EXCLUDE FROM GHIDRA JAR
+DATA SEARCH IGNORE DIR:
+MODULE DIR:
+FAT JAR:
+#+END_SRC
 
 * API
 ** Flat API
