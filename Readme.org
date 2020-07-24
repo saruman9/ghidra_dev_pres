@@ -752,8 +752,69 @@ Base class to handle common program events:
 - Program Selection
 - Program Highlight
 
-* Docking windows
-* Component Provider
+* GUI
+** Docking Windows
+
+- Title bar
+- Local toolbar
+- Menu icon
+- Close button
+- Mouse cursor provides feedback
+- Components can be stacked, docked or floating
+
+Allow users to customize the layout of components within a tool
+
+/Not used GUI toolkit/
+
+** Component Provider
+
+Managed GUI component in the tool
+
+#+BEGIN_SRC java
+myComponent = new MyComponent(...);
+tool.addComponent(this, myComponent);
+#+END_SRC
+
+- Permanent — are always available in Window menu and closing just hides them
+  (e.g., Listing)
+- Transient — created on the fly and when closed are destroyed and removed from
+  Window menu (e.g., Search Results)
+
+** Custom Components
+
+- =GTable=
+- =GTree=
+- =GComboBox=
+- etc
+
+Provides:
+- Custom filtering
+- Event handling
+- Threaded models
+- Navigation
+- Look-and-feel
+
+*** Tables
+
+=GTable=
+
+- Filters
+- Columns
+- Export to CSV
+
+*** Trees
+
+=GTree=
+
+- Filters
+- Lazy loading to support large data
+
+** Actions
+
+- Right mouse actions are context sensitive
+- List of actions that appear will change based on where the cursor is located
+- User can assign/override key bindings (=F4=)
+
 * Binary Formats
 * Analyzers
 * Loaders
