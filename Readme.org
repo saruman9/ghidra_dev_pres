@@ -465,7 +465,7 @@ public class FlatProgramAPI {
 #+ATTR_HTML: :width 80%
 [[./images/script_table.png]]
 
-** Script Directories 
+** Script Directories
 
 Default:
 - =${HOME}/ghidra_scripts=
@@ -605,6 +605,153 @@ Usage: analyzeHeadless
 #+END_SRC
 
 * Plugins
+
+Derive from =Plugin= (directly or indirectly)
+
+** Services
+
+  #+BEGIN_SRC java
+  /**
+   * Plugin to for adding/deleting/editing bookmarks.
+   */
+  //@formatter:off
+  @PluginInfo(
+    status = PluginStatus.RELEASED,
+    packageName = CorePluginPackage.NAME,
+    category = PluginCategoryNames.CODE_VIEWER,
+    shortDescription = "Manage Bookmarks",
+    description = "This plugin allows the user to add, edit, " +
+        "delete, and show bookmarks. It adds navigation markers at " +
+        "addresses where bookmarks reside.",
+    servicesRequired = { GoToService.class, MarkerService.class },
+    servicesProvided = { BookmarkService.class },
+    eventsProduced = { ProgramSelectionPluginEvent.class }
+  )
+  //@formatter:on
+  #+END_SRC
+
+#+REVEAL: split
+
+#+BEGIN_SRC java
+  /**
+   * Plugin to for adding/deleting/editing bookmarks.
+   */
+  ...
+    servicesRequired = { GoToService.class, MarkerService.class },
+    servicesProvided = { BookmarkService.class },
+  ...
+#+END_SRC
+
+** Events
+
+#+BEGIN_SRC java
+  /**
+   ,* Visible Plugin to show ByteBlock data in various formats.
+   ,*/
+  //@formatter:off
+  @PluginInfo(
+    ...
+    shortDescription = "Displays bytes in memory",
+    ...
+    servicesRequired = { ProgramManager.class, GoToService.class,
+      NavigationHistoryService.class, ClipboardService.class },
+    eventsConsumed = {
+      ProgramLocationPluginEvent.class, ProgramActivatedPluginEvent.class,
+      ProgramSelectionPluginEvent.class, ProgramHighlightPluginEvent.class,
+      ProgramClosedPluginEvent.class, ByteBlockChangePluginEvent.class },
+    eventsProduced = { ProgramLocationPluginEvent.class,
+      ProgramSelectionPluginEvent.class, ByteBlockChangePluginEvent.class }
+  )
+  //@formatter:on
+#+END_SRC
+
+#+REVEAL: split
+
+#+BEGIN_SRC java
+  /**
+   * Visible Plugin to show ByteBlock data in various formats.
+   */
+  ...
+    eventsConsumed = {
+      ProgramLocationPluginEvent.class, ProgramActivatedPluginEvent.class,
+      ProgramSelectionPluginEvent.class, ProgramHighlightPluginEvent.class,
+      ProgramClosedPluginEvent.class, ByteBlockChangePluginEvent.class },
+    eventsProduced = { ProgramLocationPluginEvent.class,
+      ProgramSelectionPluginEvent.class, ByteBlockChangePluginEvent.class }
+  ...
+#+END_SRC
+
+** Actions
+
+=DockingAction= defines a user action associated with a toolbar icon and/or menu
+item.
+
+DockingActions can be invoked from the global menu, a popup menu, a toolbar,
+and/or a keybinding.
+
+** GUI
+
+A plugin may supply a =ComponentProvider= that provides a visual component when
+the plugin is added to the tool
+
+** Guidelines
+
+#+ATTR_REVEAL: :frag (appear)
+- All Plugin Classes *MUST END IN* "/Plugin/"^{*}
+- Have a =@PluginInfo(...)= annotation
+
+  #+BEGIN_SRC java
+  PluginInfo(
+    status = PluginStatus.RELEASED,
+    packageName = CorePluginPackage.NAME,
+    category = PluginCategoryNames.COMMON,
+    shortDescription = "Short description of plugin",
+    description = "Longer description of plugin.",
+    servicesProvided = { ServiceInterfaceThisPluginProvides.class }
+    servicesRequired = { RequiredServiceInterface1.class, RequiredServiceInterface2.class },
+    eventsConsumed = { SomePluginEvent.class },
+    eventsProduced = { AnotherPluginEvent.class },
+    isSlowInstallation = false
+  )
+  #+END_SRC
+
+#+REVEAL: split
+
+- Have a constructor with exactly 1 parameter: =PluginTool=
+
+  #+BEGIN_SRC java
+  public MyPlugin(PluginTool tool) { ... }
+  #+END_SRC
+
+#+ATTR_REVEAL: :frag (appear)
+- Register provided service implementations in =constructor=
+- In =init()=
+  - Retrieve services consumed
+  - Create actions
+- In =dispose()=
+  - Release resources
+
+** Useful interfaces
+
+- =OptionsChangeListener= — to receive notification when a configuration option
+  is changed by the user
+- =FrontEndable= — marks this Plugin as being suitable for inclusion in the
+  FrontEnd tool
+- =FrontEndOnly= — marks this Plugin as FrontEnd only, not usable in CodeBrowser
+  or other tools
+- =ProgramaticUseOnly= — marks this Plugin as special and not for user
+  configuration
+
+** =ProgramPlugin=
+
+Extends =Plugin= class
+
+Base class to handle common program events:
+- Program Open/Close
+- Program Location
+- Program Selection
+- Program Highlight
+
 * Docking windows
 * Component Provider
 * Binary Formats
