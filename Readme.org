@@ -182,6 +182,7 @@ Point to the directory of sources of Ghidra, when it will be needed
   [[./images/idea_attach_to_process.png]]
 
 - Debug a script/plugin
+- Use a recompiling for testing
 
 ** Ghidra developing
 
@@ -396,11 +397,213 @@ FAT JAR:
 #+END_SRC
 
 * API
-** Flat API
 ** Program API
 
+#+ATTR_REVEAL: :frag (appear)
+- Object-Oriented
+- Very deep
+
+#+REVEAL: split
+
+- =Program=
+  - =Listing=
+    - =Instructions=
+    - =Data=
+    - =Functions=
+      - =Basic Blocks=
+    - =Comments=
+  - =Memory=
+    - =Memory Blocks=
+    - =Bytes=
+  - =Symbol Tables=
+    - =Symbols=
+- etc
+
+#+REVEAL: split
+
+- Can change from version to version
+
+** Flat API
+
+#+ATTR_REVEAL: :frag (appear)
+- Flat
+- Provides access to most common features
+- Is not complete
+- Will not change (legacy)
+
+*** =FlatProgramAPI=
+
+#+BEGIN_SRC java
+public class FlatProgramAPI {
+    FlatProgramAPI(Program)
+
+    analyze()
+    clear...()
+    create...()
+    find...()
+    get...()
+    remove...()
+    save()
+    set...()
+    to...()
+}
+#+END_SRC
+
 * Scripting
+** Script Manager
+
+#+ATTR_HTML: :width 80%
+[[./images/script_manager.png]]
+
+*** Script Category Tree
+
+#+ATTR_HTML: :width 80%
+[[./images/script_category_tree.png]]
+
+*** Script table
+
+#+ATTR_HTML: :width 80%
+[[./images/script_table.png]]
+
+** Script Directories 
+
+Default:
+- =${HOME}/ghidra_scripts=
+- =${GHIDRA_HOME}/Features/Base/ghidra_scripts=
+- =${GHIDRA_MODULE}/ghidra_scripts=
+
+*** Custom
+
+#+ATTR_HTML: :width 30%
+[[./images/script_directories_custom.png]]
+
+#+ATTR_HTML: :width 50%
+[[./images/script_directories_default.png]]
+
+** =GhidraScriptAPI=
+
+#+BEGIN_SRC java
+  public class GhidraScriptAPI extends FlatProgramAPI {
+
+    ask...()
+    create...()
+    get...()
+    print...()
+    run...()
+    to...()
+  }
+#+END_SRC
+
+** Sample Script
+
+#+BEGIN_SRC java
+//Writes "Hello World" to console.
+//@category    Examples
+//@menupath    Help.Examples.Hello World
+//@keybinding  ctrl shift COMMA
+//@toolbar    world.png
+
+import ghidra.app.script.GhidraScript;
+
+public class HelloWorldScript extends GhidraScript {
+        @Override
+        public void run() throws Exception {
+                println("Hello World");
+        }
+}
+#+END_SRC
+
+** Script State
+*** =currentProgram=
+
+The current active open program
+
+*** =currentAddress=
+
+The current address of the location of the cursor
+
+*** =currentLocation=
+
+The program location of the cursor
+
+#+BEGIN_SRC java
+OperandFieldLocation@00400260, row=0, col=0, charOffset=8, OpRep = 47h    G,
+ subOpIndex = -1, VariableOffset = null
+#+END_SRC
+
+*** =currentSelection=
+
+The current /selection/ or =null= if no selection exists
+
+*** =currentHighlight=
+
+The current /highlight/ or =null= if no highlight exists
+
+*** =state=
+
+Provides place to store environment variables
+
+*** =monitor=
+
+- Allows script writer to inform user (messages and/or progress)
+- Allows user to cancel script
+- Always use inside loops
+
+#+BEGIN_SRC java
+while (!monitor.isCancelled()) {
+...
+}
+#+END_SRC
+
+** Console
+
+[[./images/script_console.png]]
+
+** Python Interpreter
+
+[[./images/python_interpreter.png]]
+
 * Headless scripting
+
+  - Ghidra can be run from the command line without invoking the user interface
+  - Can be run on one or more programs
+  - Any script that does not invoke the GUI can be run in headless mode
+
+** Arguments
+
+#+BEGIN_SRC shell
+Usage: analyzeHeadless
+           <project_location> <project_name>[/<folder_path>]
+             | ghidra://<server>[:<port>]/<repository_name>[/<folder_path>]
+           [[-import [<directory>|<file>]+] | [-process [<project_file>]]]
+           [-preScript <ScriptName>]
+           [-postScript <ScriptName>]
+           [-scriptPath "<path1>[;<path2>...]"]
+           [-propertiesPath "<path1>[;<path2>...]"]
+           [-scriptlog <path to script log file>]
+           [-log <path to log file>]
+           [-overwrite]
+           [-recursive]
+#+END_SRC
+
+#+REVEAL: split
+
+#+BEGIN_SRC shell
+           [-readOnly]
+           [-deleteProject]
+           [-noanalysis]
+           [-processor <languageID>]
+           [-cspec <compilerSpecID>]
+           [-analysisTimeoutPerFile <timeout in seconds>]
+           [-keystore <KeystorePath>]
+           [-connect <userID>]
+           [-p]
+           [-commit ["<comment>"]]
+           [-okToDelete]
+           [-max-cpu <max cpu cores to use>]
+           [-loader <desired loader name>]
+#+END_SRC
+
 * Plugins
 * Docking windows
 * Component Provider
