@@ -5,7 +5,6 @@
 #+OPTIONS: reveal_slide_number:c/t
 #+OPTIONS: reveal_history:t
 #+OPTIONS: toc:nil
-# #+OPTIONS: num:nil
 #+REVEAL_HLEVEL: 2
 #+REVEAL_TRANS: linear
 #+REVEAL_TITLE_SLIDE:<h1>%t</h1><p>%a</p><p><a href="https://t.me/dura_lex">@dura_lex</a></p>
@@ -816,9 +815,173 @@ Provides:
 - User can assign/override key bindings (=F4=)
 
 * Binary Formats
-* Analyzers
-* Loaders
-* File System Loaders
-* Sleigh
+
+- ELF
+- PE
+- Mach-O
+- etc
+
+** New Binary Format
+
+What is needed for a new format?
+
+- Data structure to parse the format
+- Language, if not currently supported
+- Loader for Ghidra's importer
+- Analyzers to annotate the binary format
+
+Use Skeleton extension
+
+** Loaders
+
+Must implement =Loader= interface (all Loader Classes *MUST END IN* "/Loader/")
+
+Consider =AbstractProgramLoader= or =AbstractLibraryLoader=
+
+#+BEGIN_SRC java
+public class SkeletonLoader implements Loader {
+  Collection<LoadSpec> findSupportedLoadSpecs(...);
+  List<DomainObject> load(...);
+  ...
+}
+#+END_SRC
+
+
+*** =.opinion= files
+
+Must update the =.opinion= file for each processor supported by the format
+
+#+BEGIN_SRC xml
+  <opinions>
+    <constraint loader="Skeleton" compilerSpecID="default">
+      <constraint primary="40" secondary="123"
+        processor="Skel" size="16" variant="default" />
+    </constraint>
+    <constraint loader="MS Common Object File Format (COFF)"
+      compilerSpecID="default">
+      <constraint primary="61" processor="Skel" size="16"
+        variant="default" />
+    </constraint>
+  </opinions>
+#+END_SRC
+
+** Analyzers
+
+Must implement =Analyzer= interface (all Analyzer Classes *MUST END IN*
+"/Analyzer/")
+
+#+BEGIN_SRC java
+// Display name, input type, priority
+String getName();
+AnalyzerType getAnalysisType();
+AnalysisPriority getPriority();
+
+// Called for changes to analyzers inputs
+boolean added(...);
+boolean removed(...);
+
+// Register and react to user options
+void registerOptions(...);
+void optionsChanged(...);
+
+...
+#+END_SRC
+
+*** =AnalyzerType=
+
+- BYTES — analyze anywhere defined bytes are present (block of memory added)
+- INSTRUCTIONS — analyze anywhere instructions are defined
+- FUNCTIONS — analyze where a function is defined
+- FUNCTION-MODIFIERS — analyze functions whose modifiers have changed
+- FUNCTION-SIGNATURES — analyze functions whose signatures have changed
+- DATA — analyze where data has been defined
+
+* File System Loader
+
+Provides an alternative importer, which allows importing many programs from a
+single archive or image
+
+- Drills down into file systems, including nested file systems
+- Extract files
+- Import binaries
+- Perform static analysis
+- View as text
+- View as image (i.e., picture)
+
+** Examples
+
+#+REVEAL_HTML: <div class="column" style="float:left; width: 50%">
+- Android XML
+- Android APK
+- Apple 8900
+- GZIP
+- YAFFS2
+- Android DEX to JAR
+- 7Zip
+#+REVEAL_HTML: </div>
+
+#+REVEAL_HTML: <div class="column" style="float:left; width: 50%">
+- COFF Archive
+- CPIO
+- Crushed PNG
+- iOS Disk Image (DMG)
+- iOS DYLD Cache Version 1
+- etc
+#+REVEAL_HTML: </div>
+
+** Implementation
+
+Extensible using =GFileSystem= interface (all GFileSystem Sub-classes *MUST END
+IN* "/FileSystem/")
+
+#+BEGIN_SRC java
+@FileSystemInfo(type = "ext4",
+                description = "EXT4",
+                factory = Ext4FileSystemFactory.class)
+public class Ext4FileSystem implements GFileSystem {
+  ...
+}
+#+END_SRC
+
+* Sleigh / PCode
+
+- Used to disassemble binary to assemble
+- Used to decompile assembly into C
+- Decompiler optimizes
+- Performs data type propagation
+- etc
+
+=${GHIDRA_HOME}/Ghidra/Processors=
+
 * Build extension
+
+#+BEGIN_SRC shell
+$ gradle
+#+END_SRC
+
+or
+
+#+BEGIN_SRC shell
+$ GHIDRA_INSTALL_DIR=${GHIDRA_HOME} gradle
+#+END_SRC
+
+See =./dist/=
+
+** Install extension
+
+#+ATTR_HTML: :width 30%
+[[./images/install_extension.png]]
+
+#+REVEAL: split
+
+#+ATTR_HTML: :width 80%
+[[./images/add_extension.png]]
+
 * Contributing to Ghidra
+
+- Search in the sources, read issues (don't do double work)
+- Ask a question in
+  [[https://t.me/GhidraRE][Telegram]]/[[https://matrix.to/#/#ghidra:matrix.org][Matrix]]/[[https://discord.gg/S4tQnUB][Discord]]
+- Write an issue
+- Create a PR
+- Wait...
