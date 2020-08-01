@@ -90,7 +90,6 @@
 - Multi-platform (Linux, Mac, Windows, FreeBSD, Haiku, etc)
 
 * IDE for developing (+Eclipse+ IntelliJ IDEA)
-
 ** Why not Eclipse
 
 Not to my taste, but...
@@ -216,7 +215,6 @@ Skip Gralde's tasks for faster building (use =-x= argument):
 - etc
 
 * Development
-
 ** Extension Point
 
 Every piece (Plugins, Scripts, Analyzers, Fields, Importers, Exporters, etc) of
@@ -394,6 +392,30 @@ DATA SEARCH IGNORE DIR:
 MODULE DIR:
 FAT JAR:
 #+END_SRC
+
+** Build extension
+
+#+BEGIN_SRC shell
+$ gradle
+#+END_SRC
+
+or
+
+#+BEGIN_SRC shell
+$ GHIDRA_INSTALL_DIR=${GHIDRA_HOME} gradle
+#+END_SRC
+
+See =./dist/=
+
+*** Install extension
+
+#+ATTR_HTML: :width 30%
+[[./images/install_extension.png]]
+
+#+REVEAL: split
+
+#+ATTR_HTML: :width 80%
+[[./images/add_extension.png]]
 
 * API
 ** Program API
@@ -899,6 +921,16 @@ What is needed for a new format?
 
 Use Skeleton extension
 
+** Sleigh / PCode
+
+- Used to disassemble binary to assemble
+- Used to decompile assembly into C
+- Decompiler optimizes
+- Performs data type propagation
+- etc
+
+=${GHIDRA_HOME}/Ghidra/Processors=
+
 ** Loaders
 
 Must implement =Loader= interface (all Loader Classes *MUST END IN* "/Loader/")
@@ -1009,40 +1041,6 @@ public class Ext4FileSystem implements GFileSystem {
   ...
 }
 #+END_SRC
-
-* Sleigh / PCode
-
-- Used to disassemble binary to assemble
-- Used to decompile assembly into C
-- Decompiler optimizes
-- Performs data type propagation
-- etc
-
-=${GHIDRA_HOME}/Ghidra/Processors=
-
-* Build extension
-
-#+BEGIN_SRC shell
-$ gradle
-#+END_SRC
-
-or
-
-#+BEGIN_SRC shell
-$ GHIDRA_INSTALL_DIR=${GHIDRA_HOME} gradle
-#+END_SRC
-
-See =./dist/=
-
-** Install extension
-
-#+ATTR_HTML: :width 30%
-[[./images/install_extension.png]]
-
-#+REVEAL: split
-
-#+ATTR_HTML: :width 80%
-[[./images/add_extension.png]]
 
 * Contributing to Ghidra
 
