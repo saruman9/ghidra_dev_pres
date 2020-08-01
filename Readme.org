@@ -554,6 +554,73 @@ while (!monitor.isCancelled()) {
 }
 #+END_SRC
 
+** Ghidra Bundles
+
+Dynamic modules with OSGi
+
+*** Dependency
+- Intra-bundle (compile time) dependency
+
+=my_ghidra_scripts/mylib/MyLibrary.java=:
+#+BEGIN_SRC java
+package mylib;
+
+public class MyLibrary {
+  public void doStuff() {
+    // ...
+  }
+}
+#+END_SRC
+
+=my_ghidra_scripts/IntraBundleExampleScript.java=:
+#+BEGIN_SRC java
+// Intra-bundle dependency example.
+//@category Examples
+
+import ghidra.app.script.GhidraScript;
+import mylib.MyLibrary;
+#+END_SRC
+
+#+REVEAL: split
+
+- Inter-bundle (run time) dependency
+
+=@importpackage= in a script
+
+=your_ghidra_scripts/yourlib/YourLibrary.java=:
+#+BEGIN_SRC java
+  package yourlib;
+
+  public class YourLibrary {
+    public void doOtherStuff() {
+      // ...
+    }
+  }
+#+END_SRC
+
+#+REVEAL: split
+
+=my_ghidra_scripts/InterBundleExampleScript.java=:
+#+BEGIN_SRC java
+// Inter-bundle dependency example.
+//@category Examples
+//@importpackage yourlib
+
+import ghidra.app.script.GhidraScript;
+import yourlib.YourLibrary;
+
+public class InterBundleExampleScript extends GhidraScript {
+  @Override
+  public void run() throws Exception {
+    new YourLibrary().doOtherStuff();
+  }
+}
+#+END_SRC
+
+*** Cleaning bundles
+
+=$HOME/.ghidra/.ghidra-<version>/osgi/compiled-bundles/<hash>=
+
 ** Console
 
 [[./images/script_console.png]]
