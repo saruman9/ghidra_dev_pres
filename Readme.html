@@ -1,0 +1,1780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Ghidra. Dev</title>
+<meta name="author" content="Abc Xyz"/>
+<style type="text/css">
+.underline { text-decoration: underline; }
+</style>
+<link rel="stylesheet" href="./reveal.js/css/reveal.css"/>
+
+<link rel="stylesheet" href="./reveal.js/css/theme/night.css" id="theme"/>
+
+<link rel="stylesheet" href="override.css"/>
+
+<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+<script>
+    if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = './reveal.js/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    }
+</script>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section id="sec-title-slide" data-background="./images/ghidra_main.png" data-background-size="50%">
+<h1>Ghidra. Dev</h1><p>Abc Xyz</p><p><a href="https://t.me/dura_lex">@dura_lex</a></p>
+</section>
+
+<section>
+<section id="slide-orgf4a953d">
+<h2 id="orgf4a953d">Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#/slide-1">1. Introduction</a></li>
+<li><a href="#/slide-2">2. IDE for developing (<del>Eclipse</del> IntelliJ IDEA)</a></li>
+<li><a href="#/slide-3">3. Development</a></li>
+<li><a href="#/slide-4">4. API</a></li>
+<li><a href="#/slide-5">5. Scripting</a></li>
+<li><a href="#/slide-6">6. Headless scripting</a></li>
+<li><a href="#/slide-7">7. Plugins</a></li>
+<li><a href="#/slide-8">8. GUI</a></li>
+<li><a href="#/slide-9">9. Binary Formats</a></li>
+<li><a href="#/slide-10">10. File System Loader</a></li>
+<li><a href="#/slide-11">11. Contributing to Ghidra</a></li>
+</ul>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-1">
+<h2 id="1"><span class="section-number-2">1</span> Introduction</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+</section>
+</section>
+<section>
+<section id="slide-1-1">
+<h3 id="1-1"><span class="section-number-3">1.1</span> About Ghidra</h3>
+<ul>
+<li>Integrated environment for software reverse engineering (IDE for SRE)</li>
+<li>Developed by NSA Research</li>
+<li>Written almost entirely in Java</li>
+<li>Some native code (C/C++)</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-1-2">
+<h3 id="1-2"><span class="section-number-3">1.2</span> Major parts</h3>
+<div class="outline-text-3" id="text-1-2">
+</div>
+</section>
+<section id="slide-1-2-1">
+<h4 id="1-2-1"><span class="section-number-4">1.2.1</span> Programs</h4>
+<ul>
+<li>ELF</li>
+<li>PE</li>
+<li>Mach-O</li>
+<li>COFF</li>
+<li>PDB</li>
+<li>Raw binaries</li>
+<li>etc</li>
+
+</ul>
+
+</section>
+<section id="slide-1-2-2">
+<h4 id="1-2-2"><span class="section-number-4">1.2.2</span> Project Manager</h4>
+
+<div class="figure">
+<p><img src="./images/project_manager.png" alt="project_manager.png" width="20%" />
+</p>
+</div>
+
+</section>
+<section id="slide-1-2-3">
+<h4 id="1-2-3"><span class="section-number-4">1.2.3</span> Tools</h4>
+
+<div class="figure">
+<p><img src="./images/tool_chest.png" alt="tool_chest.png" width="30%" />
+</p>
+</div>
+
+</section>
+<section>
+
+
+<div class="figure">
+<p><img src="./images/tool.png" alt="tool.png" width="90%" />
+</p>
+</div>
+
+</section>
+<section id="slide-1-2-4">
+<h4 id="1-2-4"><span class="section-number-4">1.2.4</span> Plugins</h4>
+<div class="column" style="float:left; width: 50%">
+
+<div class="figure">
+<p><img src="./images/plugins_configure.png" alt="plugins_configure.png" />
+</p>
+</div>
+</div>
+
+<div class="column" style="float:left; width: 50%">
+
+<div class="figure">
+<p><img src="./images/plugins_core.png" alt="plugins_core.png" />
+</p>
+</div>
+</div>
+
+</section>
+<section id="slide-1-2-5">
+<h4 id="1-2-5"><span class="section-number-4">1.2.5</span> Scripts</h4>
+
+<div class="figure">
+<p><img src="./images/scripts.png" alt="scripts.png" width="90%" />
+</p>
+</div>
+
+</section>
+<section id="slide-1-2-6">
+<h4 id="1-2-6"><span class="section-number-4">1.2.6</span> Server</h4>
+<ul>
+<li>Multiple users work together on the same program(s)</li>
+<li>Network storage for the shared project</li>
+<li>Controls user access</li>
+<li>Allows files to be versioned (à la primitive Git)</li>
+<li>Others features</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-1-3">
+<h3 id="1-3"><span class="section-number-3">1.3</span> Why use Ghidra?</h3>
+<ul>
+<li>Designed to handle large data sets (not large binaries!)</li>
+<li>Supports collaboration</li>
+<li>Highly configurable environment</li>
+<li>Highly extensible via plugins and scripts</li>
+<li>Multi-platform (Linux, Mac, Windows, FreeBSD, Haiku, etc)</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-2">
+<h2 id="2"><span class="section-number-2">2</span> IDE for developing (<del>Eclipse</del> IntelliJ IDEA)</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+</section>
+</section>
+<section>
+<section id="slide-2-1">
+<h3 id="2-1"><span class="section-number-3">2.1</span> Why not Eclipse</h3>
+<p>
+Not to my taste, but&#x2026;
+</p>
+
+<ul>
+<li>GhidraDev plugin (extensions and scripts developing)</li>
+<li>GhidraSleighEditor plugin (Sleigh linter)</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-2-2">
+<h3 id="2-2"><span class="section-number-3">2.2</span> My alternatives</h3>
+<ul>
+<li class="fragment appear">Emacs (Eclipse backend)?</li>
+<li class="fragment appear">VIM (Eclipse backend)?</li>
+<li class="fragment appear">IntelliJ IDEA (Community Edition) ✓</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-2-3">
+<h3 id="2-3"><span class="section-number-3">2.3</span> Integrate with Ghidra (Linux)</h3>
+<div class="outline-text-3" id="text-2-3">
+</div>
+</section>
+<section id="slide-2-3-1">
+<h4 id="2-3-1"><span class="section-number-4">2.3.1</span> Plugins</h4>
+<ul>
+<li><p>
+Use default <code>Skeleton</code> project
+</p>
+
+<p>
+Copy <code>Skeleton</code>'s directory (or yours prepared extension) to needed location
+</p></li>
+
+</ul>
+
+</section>
+<section>
+
+<ul>
+<li>Create the project
+
+<ul>
+<li><code>File</code> → <code>New</code> → <code>Project from Existing Sources...</code> (use Gradle model)</li>
+<li>Choose the directory</li>
+
+</ul></li>
+
+</ul>
+
+</section>
+<section>
+
+<ul>
+<li>Set <code>gradle</code>'s environment (<code>GHIDRA_INSTALL_DIR</code>)
+
+<ul>
+<li>Set in <i>Run/Debug Configurations</i> (Gradle)</li>
+<li><p>
+Create <code>gradle.properties</code> file and set the environment:
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-gradle">GHIDRA_INSTALL_DIR = /home/user/ghidra
+</pre>
+</div></li>
+
+</ul></li>
+
+</ul>
+
+</section>
+<section>
+
+<p>
+Point to the directory of sources of Ghidra, when it will be needed
+</p>
+
+
+<div class="figure">
+<p><img src="./images/idea_ghidra_sources.png" alt="idea_ghidra_sources.png" />
+</p>
+</div>
+
+</section>
+<section id="slide-2-3-2">
+<h4 id="2-3-2"><span class="section-number-4">2.3.2</span> Scripts</h4>
+<ul>
+<li>Create or use existing the <code>ghidra_scripts</code> directory</li>
+<li><p>
+Use existing <code>HelloWorldScript</code> script as a template
+</p>
+
+<p>
+<code>${GHIDRA_HOME}/Ghidra/Features/Base/ghidra_scripts/HelloWorldScript.java</code>
+</p></li>
+
+</ul>
+
+</section>
+<section>
+
+<ul>
+<li>Import the directory as Existing Sources without models</li>
+
+</ul>
+
+</section>
+<section>
+
+<ul>
+<li>Add Ghidra as module to the project:
+
+<ul>
+<li>Open Project Structure (<code>F4</code> hotkey in Project window)</li>
+<li>Select Modules item</li>
+<li><p>
+Import Module (select the directory of sources of Ghidra)
+</p>
+
+
+<div class="figure">
+<p><img src="./images/idea_import_module.png" alt="idea_import_module.png" width="30%" />
+</p>
+</div></li>
+
+</ul></li>
+
+</ul>
+
+</section>
+<section>
+
+<ul>
+<li>Wait while IntelliJ IDEA indexes Ghidra's files</li>
+<li><p>
+Add module dependencies via Context Actions
+</p>
+
+
+<div class="figure">
+<p><img src="./images/idea_module_dep.png" alt="idea_module_dep.png" />
+</p>
+</div></li>
+
+<li>Also you can add templates/snippets for scripts</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-2-4">
+<h3 id="2-4"><span class="section-number-3">2.4</span> Debug</h3>
+<ul>
+<li class="fragment appear"><p>
+Run Ghidra in Debug mode
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-sh">$ /opt/ghidra/support/ghidraDebug
+</pre>
+</div></li>
+
+<li class="fragment appear"><p>
+Attach to Process&#x2026;
+</p>
+
+
+<div class="figure">
+<p><img src="./images/idea_attach_to_process.png" alt="idea_attach_to_process.png" />
+</p>
+</div></li>
+
+<li class="fragment appear">Debug a script/plugin</li>
+<li class="fragment appear">Use a recompiling for testing</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-2-5">
+<h3 id="2-5"><span class="section-number-3">2.5</span> Ghidra developing</h3>
+<ul>
+<li class="fragment appear"><p>
+Clone the repository
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-sh">$ git clone https://github.com/NationalSecurityAgency/ghidra
+</pre>
+</div></li>
+
+<li class="fragment appear"><p>
+Build Ghidra (see <code>DevGuide.md</code> for details)
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-sh">$ gradle --init-script gradle/support/fetchDependencies.gradle init
+$ gradle buildGhidra
+</pre>
+</div></li>
+
+</ul>
+
+</section>
+<section>
+
+<ul>
+<li>Create the project from Existing Sources (Gradle model)</li>
+
+</ul>
+<ul>
+<li class="fragment appear">For testing of patches or new features you can use features of IntelliJ IDEA
+or Linux tools (<code>sed</code>, <code>inotify</code>, <code>(bsd)tar</code>, etc)</li>
+
+</ul>
+
+</section>
+<section>
+
+<p>
+Skip Gralde's tasks for faster building (use <code>-x</code> argument):
+</p>
+
+<ul>
+<li><code>createJavadocs</code></li>
+<li><code>createJsondocs</code></li>
+<li><code>sleighCompile</code></li>
+<li>etc</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-3">
+<h2 id="3"><span class="section-number-2">3</span> Development</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+</section>
+</section>
+<section>
+<section id="slide-3-1">
+<h3 id="3-1"><span class="section-number-3">3.1</span> Extension Point</h3>
+<p>
+Every piece (Plugins, Scripts, Analyzers, Fields, Importers, Exporters, etc) of
+Ghidra is extensible!
+</p>
+
+<p>
+Extensible components:
+</p>
+<ul>
+<li><code>ExtensionPoint</code> interface</li>
+<li>List suffix in <code>ExtensionPoint.manifest</code></li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-3-2">
+<h3 id="3-2"><span class="section-number-3">3.2</span> Extension source tree</h3>
+
+<div class="figure">
+<p><img src="./images/extension_structure.png" alt="extension_structure.png" width="25%" />
+</p>
+</div>
+
+</section>
+<section id="slide-3-2-1">
+<h4 id="3-2-1"><span class="section-number-4">3.2.1</span> <code>src</code></h4>
+<pre  class="example">
+./src
+├── main
+│  ├── help
+│  │  └── help
+│  │     ├── shared
+│  │     │  └── Frontpage.css
+│  │     ├── topics
+│  │     │  └── skeleton
+│  │     │     └── help.html
+│  │     └── TOC_Source.xml
+│  ├── java
+│  │  └── skeleton
+│  │     ├── SkeletonAnalyzer.java
+│  │     ├── SkeletonExporter.java
+│  │     ├── SkeletonFileSystem.java
+│  │     ├── SkeletonLoader.java
+│  │     └── SkeletonPlugin.java
+│  └── resources
+│     └── images
+└── test
+   └── java
+</pre>
+
+</section>
+<section>
+
+<pre  class="example">
+./src/main
+├── java
+│  └── skeleton
+│     ├── SkeletonAnalyzer.java
+│     ├── SkeletonExporter.java
+│     ├── SkeletonFileSystem.java
+│     ├── SkeletonLoader.java
+│     └── SkeletonPlugin.java
+└── resources
+   └── images
+</pre>
+
+<ul>
+<li>Packaged into a <code>.jar</code> file</li>
+<li>Hold the Java/Clojure/Kotlin/JVM-based source for this extension</li>
+
+</ul>
+
+</section>
+<section>
+
+<pre  class="example">
+./src/test
+└── java
+</pre>
+
+<ul>
+<li>Unit tests are not included in the <code>.jar</code> file</li>
+
+</ul>
+
+</section>
+<section>
+
+<pre  class="example">
+./src/main/help
+└── help
+   ├── shared
+   │  └── Frontpage.css
+   ├── topics
+   │  └── skeleton
+   │     └── help.html
+   └── TOC_Source.xml
+</pre>
+
+<ul>
+<li>Online help for this extension</li>
+<li>Contains the table of contents to append</li>
+<li>Contains the CSS and HTML components</li>
+
+</ul>
+
+</section>
+<section id="slide-3-2-2">
+<h4 id="3-2-2"><span class="section-number-4">3.2.2</span> <code>ghidra_scripts</code></h4>
+<pre  class="example">
+./ghidra_scripts
+</pre>
+
+<ul>
+<li>Holds scripts for this extension</li>
+<li>Unpacked as source to the file system on installation</li>
+<li>May provide examples to use an extension's API</li>
+
+</ul>
+
+</section>
+<section id="slide-3-2-3">
+<h4 id="3-2-3"><span class="section-number-4">3.2.3</span> <code>data</code></h4>
+<pre  class="example">
+./data
+├── languages
+│  ├── skel.cspec
+│  ├── skel.ldefs
+│  ├── skel.opinion
+│  ├── skel.pspec
+│  ├── skel.sinc
+│  └── skel.slaspec
+├── buildLanguage.xml
+└── sleighArgs.txt
+</pre>
+
+<ul>
+<li>Holds data files for this extension</li>
+<li>Will not end up inside the <code>.jar</code> file</li>
+<li>Will be present in the distribution <code>.zip</code> file</li>
+<li>Unpacked to the file system on installation</li>
+
+</ul>
+
+</section>
+<section id="slide-3-2-4">
+<h4 id="3-2-4"><span class="section-number-4">3.2.4</span> <code>lib</code></h4>
+<pre  class="example">
+./lib
+</pre>
+
+<ul>
+<li>Holds external Java dependencies for this extension</li>
+<li>When working in IntelliJ IDEA, the contents of this directory should be added
+by Gradle's task</li>
+
+</ul>
+
+</section>
+<section id="slide-3-2-5">
+<h4 id="3-2-5"><span class="section-number-4">3.2.5</span> <code>os</code></h4>
+<pre  class="example">
+./os
+├── linux64
+├── osx64
+└── win64
+</pre>
+
+<ul>
+<li>Holds native components for this extension</li>
+<li>NEVER EVER USE JNI! Communicate with a native process using sockets, I/O,
+stream, etc</li>
+
+</ul>
+
+</section>
+<section id="slide-3-2-6">
+<h4 id="3-2-6"><span class="section-number-4">3.2.6</span> Other</h4>
+<pre  class="example">
+.
+├── build.gradle
+├── extension.properties
+└── Module.manifest
+</pre>
+
+</section>
+<section>
+
+<p>
+<code>build.gradle</code>
+</p>
+
+<p>
+Gralde's task. No need for changes
+</p>
+
+</section>
+<section>
+
+<p>
+<code>extension.properties</code>
+</p>
+
+<pre  class="example">
+name=@extname@
+description=The extension description.
+author=
+createdOn=
+version=@extversion@
+</pre>
+
+</section>
+<section>
+
+<p>
+<code>Module.manifest</code>
+</p>
+
+<pre  class="example">
+MODULE NAME:
+MODULE DEPENDENCY:
+MODULE FILE LICENSE:
+EXCLUDE FROM GHIDRA JAR
+DATA SEARCH IGNORE DIR:
+MODULE DIR:
+FAT JAR:
+</pre>
+
+</section>
+</section>
+<section>
+<section id="slide-3-3">
+<h3 id="3-3"><span class="section-number-3">3.3</span> Build extension</h3>
+<div class="org-src-container">
+
+<pre  class="src src-shell">$ gradle
+</pre>
+</div>
+
+<p>
+or
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-shell">$ <span style="color: #8787d7;">GHIDRA_INSTALL_DIR</span>=$<span style="color: #268bd2;">{</span><span style="color: #8787d7;">GHIDRA_HOME</span><span style="color: #268bd2;">}</span> gradle
+</pre>
+</div>
+
+<p>
+See <code>./dist/</code>
+</p>
+
+</section>
+<section id="slide-3-3-1">
+<h4 id="3-3-1"><span class="section-number-4">3.3.1</span> Install extension</h4>
+
+<div class="figure">
+<p><img src="./images/install_extension.png" alt="install_extension.png" width="30%" />
+</p>
+</div>
+
+</section>
+<section>
+
+
+<div class="figure">
+<p><img src="./images/add_extension.png" alt="add_extension.png" width="80%" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-4">
+<h2 id="4"><span class="section-number-2">4</span> API</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+</section>
+</section>
+<section>
+<section id="slide-4-1">
+<h3 id="4-1"><span class="section-number-3">4.1</span> Program API</h3>
+<ul>
+<li class="fragment appear">Object-Oriented</li>
+<li class="fragment appear">Very deep</li>
+
+</ul>
+
+</section>
+<section>
+
+<ul>
+<li><code>Program</code>
+<ul>
+<li><code>Listing</code>
+<ul>
+<li><code>Instructions</code></li>
+<li><code>Data</code></li>
+<li><code>Functions</code>
+<ul>
+<li><code>Basic Blocks</code></li>
+
+</ul></li>
+<li><code>Comments</code></li>
+
+</ul></li>
+<li><code>Memory</code>
+<ul>
+<li><code>Memory Blocks</code></li>
+<li><code>Bytes</code></li>
+
+</ul></li>
+<li><code>Symbol Tables</code>
+<ul>
+<li><code>Symbols</code></li>
+
+</ul></li>
+
+</ul></li>
+<li>etc</li>
+
+</ul>
+
+</section>
+<section>
+
+<ul>
+<li>Can change from version to version</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-4-2">
+<h3 id="4-2"><span class="section-number-3">4.2</span> Flat API</h3>
+<ul>
+<li class="fragment appear">Flat</li>
+<li class="fragment appear">Provides access to most common features</li>
+<li class="fragment appear">Is not complete</li>
+<li class="fragment appear">Will not change (legacy)</li>
+
+</ul>
+
+</section>
+<section id="slide-4-2-1">
+<h4 id="4-2-1"><span class="section-number-4">4.2.1</span> <code>FlatProgramAPI</code></h4>
+<div class="org-src-container">
+
+<pre  class="src src-java"><span style="color: #268bd2; font-weight: bold;">public</span> <span style="color: #268bd2; font-weight: bold;">class</span> <span style="color: #df005f; font-weight: bold;">FlatProgramAPI</span> <span style="color: #268bd2;">{</span>
+    FlatProgramAPI<span style="color: #d75fd7;">(</span>Program<span style="color: #d75fd7;">)</span>
+
+    analyze<span style="color: #d75fd7;">()</span>
+    clear...<span style="color: #d75fd7;">()</span>
+    create...<span style="color: #d75fd7;">()</span>
+    find...<span style="color: #d75fd7;">()</span>
+    get...<span style="color: #d75fd7;">()</span>
+    remove...<span style="color: #d75fd7;">()</span>
+    save<span style="color: #d75fd7;">()</span>
+    set...<span style="color: #d75fd7;">()</span>
+    to...<span style="color: #d75fd7;">()</span>
+<span style="color: #268bd2;">}</span>
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-5">
+<h2 id="5"><span class="section-number-2">5</span> Scripting</h2>
+<div class="outline-text-2" id="text-5">
+</div>
+</section>
+</section>
+<section>
+<section id="slide-5-1">
+<h3 id="5-1"><span class="section-number-3">5.1</span> Script Manager</h3>
+
+<div class="figure">
+<p><img src="./images/script_manager.png" alt="script_manager.png" width="80%" />
+</p>
+</div>
+
+</section>
+<section id="slide-5-1-1">
+<h4 id="5-1-1"><span class="section-number-4">5.1.1</span> Script Category Tree</h4>
+
+<div class="figure">
+<p><img src="./images/script_category_tree.png" alt="script_category_tree.png" width="80%" />
+</p>
+</div>
+
+</section>
+<section id="slide-5-1-2">
+<h4 id="5-1-2"><span class="section-number-4">5.1.2</span> Script table</h4>
+
+<div class="figure">
+<p><img src="./images/script_table.png" alt="script_table.png" width="80%" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-5-2">
+<h3 id="5-2"><span class="section-number-3">5.2</span> Script Directories</h3>
+<p>
+Default:
+</p>
+<ul>
+<li><code>${HOME}/ghidra_scripts</code></li>
+<li><code>${GHIDRA_HOME}/Features/Base/ghidra_scripts</code></li>
+<li><code>${GHIDRA_MODULE}/ghidra_scripts</code></li>
+
+</ul>
+
+</section>
+<section id="slide-5-2-1">
+<h4 id="5-2-1"><span class="section-number-4">5.2.1</span> Custom</h4>
+
+<div class="figure">
+<p><img src="./images/script_directories_custom.png" alt="script_directories_custom.png" width="30%" />
+</p>
+</div>
+
+
+<div class="figure">
+<p><img src="./images/script_directories_default.png" alt="script_directories_default.png" width="50%" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-5-3">
+<h3 id="5-3"><span class="section-number-3">5.3</span> <code>GhidraScriptAPI</code></h3>
+<div class="org-src-container">
+
+<pre  class="src src-java"><span style="color: #268bd2; font-weight: bold;">public</span> <span style="color: #268bd2; font-weight: bold;">class</span> <span style="color: #df005f; font-weight: bold;">GhidraScriptAPI</span> <span style="color: #268bd2; font-weight: bold;">extends</span> <span style="color: #df005f; font-weight: bold;">FlatProgramAPI</span> <span style="color: #268bd2;">{</span>
+
+  ask...<span style="color: #d75fd7;">()</span>
+  create...<span style="color: #d75fd7;">()</span>
+  get...<span style="color: #d75fd7;">()</span>
+  print...<span style="color: #d75fd7;">()</span>
+  run...<span style="color: #d75fd7;">()</span>
+  to...<span style="color: #d75fd7;">()</span>
+<span style="color: #268bd2;">}</span>
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-5-4">
+<h3 id="5-4"><span class="section-number-3">5.4</span> Sample Script</h3>
+<div class="org-src-container">
+
+<pre  class="src src-java"><span style="color: #008787; background-color: #262626;">//</span><span style="color: #008787; background-color: #262626;">Writes "Hello World" to console.</span>
+<span style="color: #008787; background-color: #262626;">//</span><span style="color: #008787; background-color: #262626;">@category    Examples</span>
+<span style="color: #008787; background-color: #262626;">//</span><span style="color: #008787; background-color: #262626;">@menupath    Help.Examples.Hello World</span>
+<span style="color: #008787; background-color: #262626;">//</span><span style="color: #008787; background-color: #262626;">@keybinding  ctrl shift COMMA</span>
+<span style="color: #008787; background-color: #262626;">//</span><span style="color: #008787; background-color: #262626;">@toolbar    world.png</span>
+
+<span style="color: #268bd2; font-weight: bold;">import</span> <span style="color: #d75fd7;">ghidra</span>.<span style="color: #d75fd7;">app</span>.<span style="color: #d75fd7;">script</span>.<span style="color: #df005f; font-weight: bold;">GhidraScript</span>;
+
+<span style="color: #268bd2; font-weight: bold;">public</span> <span style="color: #268bd2; font-weight: bold;">class</span> <span style="color: #df005f; font-weight: bold;">HelloWorldScript</span> <span style="color: #268bd2; font-weight: bold;">extends</span> <span style="color: #df005f; font-weight: bold;">GhidraScript</span> <span style="color: #268bd2;">{</span>
+        <span style="color: #d75fd7;">@Override</span>
+        <span style="color: #268bd2; font-weight: bold;">public</span> <span style="color: #df005f; font-weight: bold;">void</span> <span style="color: #d75fd7; font-weight: bold;">run</span><span style="color: #d75fd7;">()</span> <span style="color: #268bd2; font-weight: bold;">throws</span> <span style="color: #df005f; font-weight: bold;">Exception</span> <span style="color: #d75fd7;">{</span>
+                println<span style="color: #2aa198;">(</span><span style="color: #2aa198;">"Hello World"</span><span style="color: #2aa198;">)</span>;
+        <span style="color: #d75fd7;">}</span>
+<span style="color: #268bd2;">}</span>
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-5-5">
+<h3 id="5-5"><span class="section-number-3">5.5</span> Script State</h3>
+<div class="outline-text-3" id="text-5-5">
+</div>
+</section>
+<section id="slide-5-5-1">
+<h4 id="5-5-1"><span class="section-number-4">5.5.1</span> <code>currentProgram</code></h4>
+<p>
+The current active open program
+</p>
+
+</section>
+<section id="slide-5-5-2">
+<h4 id="5-5-2"><span class="section-number-4">5.5.2</span> <code>currentAddress</code></h4>
+<p>
+The current address of the location of the cursor
+</p>
+
+</section>
+<section id="slide-5-5-3">
+<h4 id="5-5-3"><span class="section-number-4">5.5.3</span> <code>currentLocation</code></h4>
+<p>
+The program location of the cursor
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-java"><span style="color: #df005f; font-weight: bold;">OperandFieldLocation</span><span style="color: #8787d7;">@00400260</span>, <span style="color: #8787d7;">row</span>=<span style="color: #d75fd7;">0</span>, <span style="color: #8787d7;">col</span>=<span style="color: #d75fd7;">0</span>, <span style="color: #8787d7;">charOffset</span>=<span style="color: #d75fd7;">8</span>, <span style="color: #8787d7;">OpRep</span> = <span style="color: #d75fd7;">47h</span>    G,
+ <span style="color: #8787d7;">subOpIndex</span> = -<span style="color: #d75fd7;">1</span>, <span style="color: #8787d7;">VariableOffset</span> = <span style="color: #d75fd7;">null</span>
+</pre>
+</div>
+
+</section>
+<section id="slide-5-5-4">
+<h4 id="5-5-4"><span class="section-number-4">5.5.4</span> <code>currentSelection</code></h4>
+<p>
+The current <i>selection</i> or <code>null</code> if no selection exists
+</p>
+
+</section>
+<section id="slide-5-5-5">
+<h4 id="5-5-5"><span class="section-number-4">5.5.5</span> <code>currentHighlight</code></h4>
+<p>
+The current <i>highlight</i> or <code>null</code> if no highlight exists
+</p>
+
+</section>
+<section id="slide-5-5-6">
+<h4 id="5-5-6"><span class="section-number-4">5.5.6</span> <code>state</code></h4>
+<p>
+Provides place to store environment variables
+</p>
+
+</section>
+<section id="slide-5-5-7">
+<h4 id="5-5-7"><span class="section-number-4">5.5.7</span> <code>monitor</code></h4>
+<ul>
+<li>Allows script writer to inform user (messages and/or progress)</li>
+<li>Allows user to cancel script</li>
+<li>Always use inside loops</li>
+
+</ul>
+
+<div class="org-src-container">
+
+<pre  class="src src-java"><span style="color: #268bd2; font-weight: bold;">while</span> <span style="color: #268bd2;">(</span><span style="color: #d75fd7;">!</span>monitor.isCancelled<span style="color: #d75fd7;">()</span><span style="color: #268bd2;">)</span> <span style="color: #268bd2;">{</span>
+...
+<span style="color: #268bd2;">}</span>
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-5-6">
+<h3 id="5-6"><span class="section-number-3">5.6</span> Ghidra Bundles</h3>
+<p>
+Dynamic modules with OSGi
+</p>
+
+</section>
+<section id="slide-5-6-1">
+<h4 id="5-6-1"><span class="section-number-4">5.6.1</span> Dependency</h4>
+<ul>
+<li>Intra-bundle (compile time) dependency</li>
+
+</ul>
+
+<p>
+<code>my_ghidra_scripts/mylib/MyLibrary.java</code>:
+</p>
+<div class="org-src-container">
+
+<pre  class="src src-java"><span style="color: #268bd2; font-weight: bold;">package</span> <span style="color: #d75fd7;">mylib</span>;
+
+<span style="color: #268bd2; font-weight: bold;">public</span> <span style="color: #268bd2; font-weight: bold;">class</span> <span style="color: #df005f; font-weight: bold;">MyLibrary</span> <span style="color: #268bd2;">{</span>
+  <span style="color: #268bd2; font-weight: bold;">public</span> <span style="color: #df005f; font-weight: bold;">void</span> <span style="color: #d75fd7; font-weight: bold;">doStuff</span><span style="color: #d75fd7;">()</span> <span style="color: #d75fd7;">{</span>
+    <span style="color: #008787; background-color: #262626;">// </span><span style="color: #008787; background-color: #262626;">...</span>
+  <span style="color: #d75fd7;">}</span>
+<span style="color: #268bd2;">}</span>
+</pre>
+</div>
+
+<p>
+<code>my_ghidra_scripts/IntraBundleExampleScript.java</code>:
+</p>
+<div class="org-src-container">
+
+<pre  class="src src-java"><span style="color: #008787; background-color: #262626;">// </span><span style="color: #008787; background-color: #262626;">Intra-bundle dependency example.</span>
+<span style="color: #008787; background-color: #262626;">//</span><span style="color: #008787; background-color: #262626;">@category Examples</span>
+
+<span style="color: #268bd2; font-weight: bold;">import</span> <span style="color: #d75fd7;">ghidra</span>.<span style="color: #d75fd7;">app</span>.<span style="color: #d75fd7;">script</span>.<span style="color: #df005f; font-weight: bold;">GhidraScript</span>;
+<span style="color: #268bd2; font-weight: bold;">import</span> <span style="color: #d75fd7;">mylib</span>.<span style="color: #df005f; font-weight: bold;">MyLibrary</span>;
+</pre>
+</div>
+
+</section>
+<section>
+
+<ul>
+<li>Inter-bundle (run time) dependency</li>
+
+</ul>
+
+<p>
+<code>@importpackage</code> in a script
+</p>
+
+<p>
+<code>your_ghidra_scripts/yourlib/YourLibrary.java</code>:
+</p>
+<div class="org-src-container">
+
+<pre  class="src src-java"><span style="color: #268bd2; font-weight: bold;">package</span> <span style="color: #d75fd7;">yourlib</span>;
+
+<span style="color: #268bd2; font-weight: bold;">public</span> <span style="color: #268bd2; font-weight: bold;">class</span> <span style="color: #df005f; font-weight: bold;">YourLibrary</span> <span style="color: #268bd2;">{</span>
+  <span style="color: #268bd2; font-weight: bold;">public</span> <span style="color: #df005f; font-weight: bold;">void</span> <span style="color: #d75fd7; font-weight: bold;">doOtherStuff</span><span style="color: #d75fd7;">()</span> <span style="color: #d75fd7;">{</span>
+    <span style="color: #008787; background-color: #262626;">// </span><span style="color: #008787; background-color: #262626;">...</span>
+  <span style="color: #d75fd7;">}</span>
+<span style="color: #268bd2;">}</span>
+</pre>
+</div>
+
+</section>
+<section>
+
+<p>
+<code>my_ghidra_scripts/InterBundleExampleScript.java</code>:
+</p>
+<div class="org-src-container">
+
+<pre  class="src src-java"><span style="color: #008787; background-color: #262626;">// </span><span style="color: #008787; background-color: #262626;">Inter-bundle dependency example.</span>
+<span style="color: #008787; background-color: #262626;">//</span><span style="color: #008787; background-color: #262626;">@category Examples</span>
+<span style="color: #008787; background-color: #262626;">//</span><span style="color: #008787; background-color: #262626;">@importpackage yourlib</span>
+
+<span style="color: #268bd2; font-weight: bold;">import</span> <span style="color: #d75fd7;">ghidra</span>.<span style="color: #d75fd7;">app</span>.<span style="color: #d75fd7;">script</span>.<span style="color: #df005f; font-weight: bold;">GhidraScript</span>;
+<span style="color: #268bd2; font-weight: bold;">import</span> <span style="color: #d75fd7;">yourlib</span>.<span style="color: #df005f; font-weight: bold;">YourLibrary</span>;
+
+<span style="color: #268bd2; font-weight: bold;">public</span> <span style="color: #268bd2; font-weight: bold;">class</span> <span style="color: #df005f; font-weight: bold;">InterBundleExampleScript</span> <span style="color: #268bd2; font-weight: bold;">extends</span> <span style="color: #df005f; font-weight: bold;">GhidraScript</span> <span style="color: #268bd2;">{</span>
+  <span style="color: #d75fd7;">@Override</span>
+  <span style="color: #268bd2; font-weight: bold;">public</span> <span style="color: #df005f; font-weight: bold;">void</span> <span style="color: #d75fd7; font-weight: bold;">run</span><span style="color: #d75fd7;">()</span> <span style="color: #268bd2; font-weight: bold;">throws</span> <span style="color: #df005f; font-weight: bold;">Exception</span> <span style="color: #d75fd7;">{</span>
+    <span style="color: #268bd2; font-weight: bold;">new</span> <span style="color: #df005f; font-weight: bold;">YourLibrary</span><span style="color: #2aa198;">()</span>.doOtherStuff<span style="color: #2aa198;">()</span>;
+  <span style="color: #d75fd7;">}</span>
+<span style="color: #268bd2;">}</span>
+</pre>
+</div>
+
+</section>
+<section id="slide-5-6-2">
+<h4 id="5-6-2"><span class="section-number-4">5.6.2</span> Cleaning bundles</h4>
+<p>
+<code>$HOME/.ghidra/.ghidra-&lt;version&gt;/osgi/compiled-bundles/&lt;hash&gt;</code>
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-5-7">
+<h3 id="5-7"><span class="section-number-3">5.7</span> Console</h3>
+
+<div class="figure">
+<p><img src="./images/script_console.png" alt="script_console.png" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-5-8">
+<h3 id="5-8"><span class="section-number-3">5.8</span> Python Interpreter</h3>
+
+<div class="figure">
+<p><img src="./images/python_interpreter.png" alt="python_interpreter.png" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-6">
+<h2 id="6"><span class="section-number-2">6</span> Headless scripting</h2>
+<ul>
+<li>Ghidra can be run from the command line without invoking the user interface</li>
+<li>Can be run on one or more programs</li>
+<li>Any script that does not invoke the GUI can be run in headless mode</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-6-1">
+<h3 id="6-1"><span class="section-number-3">6.1</span> Arguments</h3>
+<div class="org-src-container">
+
+<pre  class="src src-shell">Usage: analyzeHeadless
+           &lt;project_location&gt; &lt;project_name&gt;<span style="color: #268bd2;">[</span>/&lt;folder_path&gt;<span style="color: #268bd2;">]</span>
+             | ghidra://&lt;server&gt;<span style="color: #268bd2;">[</span>:&lt;port&gt;<span style="color: #268bd2;">]</span>/&lt;repository_name&gt;<span style="color: #268bd2;">[</span>/&lt;folder_path&gt;<span style="color: #268bd2;">]</span>
+           <span style="color: #268bd2;">[</span><span style="color: #d75fd7;">[</span>-import <span style="color: #2aa198;">[</span>&lt;directory&gt;|&lt;file&gt;<span style="color: #2aa198;">]</span>+<span style="color: #d75fd7;">]</span> | <span style="color: #d75fd7;">[</span>-process <span style="color: #2aa198;">[</span>&lt;project_file&gt;<span style="color: #2aa198;">]</span><span style="color: #d75fd7;">]</span><span style="color: #268bd2;">]</span>
+           <span style="color: #268bd2;">[</span>-preScript &lt;ScriptName&gt;<span style="color: #268bd2;">]</span>
+           <span style="color: #268bd2;">[</span>-postScript &lt;ScriptName&gt;<span style="color: #268bd2;">]</span>
+           <span style="color: #268bd2;">[</span>-scriptPath <span style="color: #2aa198;">"&lt;path1&gt;[;&lt;path2&gt;...]"</span><span style="color: #268bd2;">]</span>
+           <span style="color: #268bd2;">[</span>-propertiesPath <span style="color: #2aa198;">"&lt;path1&gt;[;&lt;path2&gt;...]"</span><span style="color: #268bd2;">]</span>
+           <span style="color: #268bd2;">[</span>-scriptlog &lt;path to script log file&gt;<span style="color: #268bd2;">]</span>
+           <span style="color: #268bd2;">[</span>-log &lt;path to log file&gt;<span style="color: #268bd2;">]</span>
+           <span style="color: #268bd2;">[</span>-overwrite<span style="color: #268bd2;">]</span>
+           <span style="color: #268bd2;">[</span>-recursive<span style="color: #268bd2;">]</span>
+</pre>
+</div>
+
+</section>
+<section>
+
+<div class="org-src-container">
+
+<pre  class="src src-shell"><span style="color: #268bd2;">[</span>-readOnly<span style="color: #268bd2;">]</span>
+<span style="color: #268bd2;">[</span>-deleteProject<span style="color: #268bd2;">]</span>
+<span style="color: #268bd2;">[</span>-noanalysis<span style="color: #268bd2;">]</span>
+<span style="color: #268bd2;">[</span>-processor &lt;languageID&gt;<span style="color: #268bd2;">]</span>
+<span style="color: #268bd2;">[</span>-cspec &lt;compilerSpecID&gt;<span style="color: #268bd2;">]</span>
+<span style="color: #268bd2;">[</span>-analysisTimeoutPerFile &lt;timeout<span style="color: #268bd2; font-weight: bold;"> in</span> seconds&gt;<span style="color: #268bd2;">]</span>
+<span style="color: #268bd2;">[</span>-keystore &lt;KeystorePath&gt;<span style="color: #268bd2;">]</span>
+<span style="color: #268bd2;">[</span>-connect &lt;userID&gt;<span style="color: #268bd2;">]</span>
+<span style="color: #268bd2;">[</span>-p<span style="color: #268bd2;">]</span>
+<span style="color: #268bd2;">[</span>-commit <span style="color: #d75fd7;">[</span><span style="color: #2aa198;">"&lt;comment&gt;"</span><span style="color: #d75fd7;">]</span><span style="color: #268bd2;">]</span>
+<span style="color: #268bd2;">[</span>-okToDelete<span style="color: #268bd2;">]</span>
+<span style="color: #268bd2;">[</span>-max-cpu &lt;max cpu cores to use&gt;<span style="color: #268bd2;">]</span>
+<span style="color: #268bd2;">[</span>-loader &lt;desired loader name&gt;<span style="color: #268bd2;">]</span>
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-7">
+<h2 id="7"><span class="section-number-2">7</span> Plugins</h2>
+<p>
+Derive from <code>Plugin</code> (directly or indirectly)
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-7-1">
+<h3 id="7-1"><span class="section-number-3">7.1</span> Services</h3>
+<div class="org-src-container">
+
+<pre  class="src src-java"><span style="color: #af875f;">/**</span>
+<span style="color: #af875f;"> * Plugin to for adding/deleting/editing bookmarks.</span>
+<span style="color: #af875f;"> */</span>
+<span style="color: #008787; background-color: #262626;">//</span><span style="color: #008787; background-color: #262626;">@formatter:off</span>
+<span style="color: #d75fd7;">@PluginInfo</span><span style="color: #268bd2;">(</span>
+  status = <span style="color: #d75fd7;">PluginStatus</span>.RELEASED,
+  packageName = <span style="color: #d75fd7;">CorePluginPackage</span>.NAME,
+  category = <span style="color: #d75fd7;">PluginCategoryNames</span>.CODE_VIEWER,
+  shortDescription = <span style="color: #2aa198;">"Manage Bookmarks"</span>,
+  description = <span style="color: #2aa198;">"This plugin allows the user to add, edit, "</span> +
+      <span style="color: #2aa198;">"delete, and show bookmarks. It adds navigation markers at "</span> +
+      <span style="color: #2aa198;">"addresses where bookmarks reside."</span>,
+  servicesRequired = <span style="color: #d75fd7;">{</span> GoToService.<span style="color: #268bd2; font-weight: bold;">class</span>, MarkerService.<span style="color: #268bd2; font-weight: bold;">class</span> <span style="color: #d75fd7;">}</span>,
+  servicesProvided = <span style="color: #d75fd7;">{</span> BookmarkService.<span style="color: #268bd2; font-weight: bold;">class</span> <span style="color: #d75fd7;">}</span>,
+  eventsProduced = <span style="color: #d75fd7;">{</span> ProgramSelectionPluginEvent.<span style="color: #268bd2; font-weight: bold;">class</span> <span style="color: #d75fd7;">}</span>
+<span style="color: #268bd2;">)</span>
+<span style="color: #008787; background-color: #262626;">//</span><span style="color: #008787; background-color: #262626;">@formatter:on</span>
+</pre>
+</div>
+
+</section>
+<section>
+
+<div class="org-src-container">
+
+<pre  class="src src-java"><span style="color: #af875f;">/**</span>
+<span style="color: #af875f;"> * Plugin to for adding/deleting/editing bookmarks.</span>
+<span style="color: #af875f;"> */</span>
+...
+  servicesRequired = <span style="color: #268bd2;">{</span> GoToService.<span style="color: #268bd2; font-weight: bold;">class</span>, MarkerService.<span style="color: #268bd2; font-weight: bold;">class</span> <span style="color: #268bd2;">}</span>,
+  servicesProvided = <span style="color: #268bd2;">{</span> BookmarkService.<span style="color: #268bd2; font-weight: bold;">class</span> <span style="color: #268bd2;">}</span>,
+...
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-7-2">
+<h3 id="7-2"><span class="section-number-3">7.2</span> Events</h3>
+<div class="org-src-container">
+
+<pre  class="src src-java"><span style="color: #af875f;">/**</span>
+<span style="color: #af875f;"> * Visible Plugin to show ByteBlock data in various formats.</span>
+<span style="color: #af875f;"> */</span>
+<span style="color: #008787; background-color: #262626;">//</span><span style="color: #008787; background-color: #262626;">@formatter:off</span>
+<span style="color: #d75fd7;">@PluginInfo</span><span style="color: #268bd2;">(</span>
+  ...
+  shortDescription = <span style="color: #2aa198;">"Displays bytes in memory"</span>,
+  ...
+  servicesRequired = <span style="color: #d75fd7;">{</span> ProgramManager.<span style="color: #268bd2; font-weight: bold;">class</span>, GoToService.<span style="color: #268bd2; font-weight: bold;">class</span>,
+    NavigationHistoryService.<span style="color: #268bd2; font-weight: bold;">class</span>, ClipboardService.<span style="color: #268bd2; font-weight: bold;">class</span> <span style="color: #d75fd7;">}</span>,
+  eventsConsumed = <span style="color: #d75fd7;">{</span>
+    ProgramLocationPluginEvent.<span style="color: #268bd2; font-weight: bold;">class</span>, ProgramActivatedPluginEvent.<span style="color: #268bd2; font-weight: bold;">class</span>,
+    ProgramSelectionPluginEvent.<span style="color: #268bd2; font-weight: bold;">class</span>, ProgramHighlightPluginEvent.<span style="color: #268bd2; font-weight: bold;">class</span>,
+    ProgramClosedPluginEvent.<span style="color: #268bd2; font-weight: bold;">class</span>, ByteBlockChangePluginEvent.<span style="color: #268bd2; font-weight: bold;">class</span> <span style="color: #d75fd7;">}</span>,
+  eventsProduced = <span style="color: #d75fd7;">{</span> ProgramLocationPluginEvent.<span style="color: #268bd2; font-weight: bold;">class</span>,
+    ProgramSelectionPluginEvent.<span style="color: #268bd2; font-weight: bold;">class</span>, ByteBlockChangePluginEvent.<span style="color: #268bd2; font-weight: bold;">class</span> <span style="color: #d75fd7;">}</span>
+<span style="color: #268bd2;">)</span>
+<span style="color: #008787; background-color: #262626;">//</span><span style="color: #008787; background-color: #262626;">@formatter:on</span>
+</pre>
+</div>
+
+</section>
+<section>
+
+<div class="org-src-container">
+
+<pre  class="src src-java"><span style="color: #af875f;">/**</span>
+<span style="color: #af875f;"> * Visible Plugin to show ByteBlock data in various formats.</span>
+<span style="color: #af875f;"> */</span>
+...
+  eventsConsumed = <span style="color: #268bd2;">{</span>
+    ProgramLocationPluginEvent.<span style="color: #268bd2; font-weight: bold;">class</span>, ProgramActivatedPluginEvent.<span style="color: #268bd2; font-weight: bold;">class</span>,
+    ProgramSelectionPluginEvent.<span style="color: #268bd2; font-weight: bold;">class</span>, ProgramHighlightPluginEvent.<span style="color: #268bd2; font-weight: bold;">class</span>,
+    ProgramClosedPluginEvent.<span style="color: #268bd2; font-weight: bold;">class</span>, ByteBlockChangePluginEvent.<span style="color: #268bd2; font-weight: bold;">class</span> <span style="color: #268bd2;">}</span>,
+  eventsProduced = <span style="color: #268bd2;">{</span> ProgramLocationPluginEvent.<span style="color: #268bd2; font-weight: bold;">class</span>,
+    ProgramSelectionPluginEvent.<span style="color: #268bd2; font-weight: bold;">class</span>, ByteBlockChangePluginEvent.<span style="color: #268bd2; font-weight: bold;">class</span> <span style="color: #268bd2;">}</span>
+...
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-7-3">
+<h3 id="7-3"><span class="section-number-3">7.3</span> Actions</h3>
+<p>
+<code>DockingAction</code> defines a user action associated with a toolbar icon and/or menu
+item.
+</p>
+
+<p>
+DockingActions can be invoked from the global menu, a popup menu, a toolbar,
+and/or a keybinding.
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-7-4">
+<h3 id="7-4"><span class="section-number-3">7.4</span> GUI</h3>
+<p>
+A plugin may supply a <code>ComponentProvider</code> that provides a visual component when
+the plugin is added to the tool
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-7-5">
+<h3 id="7-5"><span class="section-number-3">7.5</span> Guidelines</h3>
+<ul>
+<li class="fragment appear">All Plugin Classes <b>MUST END IN</b> "<i>Plugin</i>"<sup>*</sup></li>
+<li class="fragment appear"><p>
+Have a <code>@PluginInfo(...)</code> annotation
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-java">PluginInfo<span style="color: #268bd2;">(</span>
+  status = <span style="color: #d75fd7;">PluginStatus</span>.RELEASED,
+  packageName = <span style="color: #d75fd7;">CorePluginPackage</span>.NAME,
+  category = <span style="color: #d75fd7;">PluginCategoryNames</span>.COMMON,
+  shortDescription = <span style="color: #2aa198;">"Short description of plugin"</span>,
+  description = <span style="color: #2aa198;">"Longer description of plugin."</span>,
+  servicesProvided = <span style="color: #d75fd7;">{</span> ServiceInterfaceThisPluginProvides.<span style="color: #268bd2; font-weight: bold;">class</span> <span style="color: #d75fd7;">}</span>
+  servicesRequired = <span style="color: #d75fd7;">{</span> RequiredServiceInterface1.<span style="color: #268bd2; font-weight: bold;">class</span>, RequiredServiceInterface2.<span style="color: #268bd2; font-weight: bold;">class</span> <span style="color: #d75fd7;">}</span>,
+  eventsConsumed = <span style="color: #d75fd7;">{</span> SomePluginEvent.<span style="color: #268bd2; font-weight: bold;">class</span> <span style="color: #d75fd7;">}</span>,
+  eventsProduced = <span style="color: #d75fd7;">{</span> AnotherPluginEvent.<span style="color: #268bd2; font-weight: bold;">class</span> <span style="color: #d75fd7;">}</span>,
+  isSlowInstallation = <span style="color: #d75fd7;">false</span>
+<span style="color: #268bd2;">)</span>
+</pre>
+</div></li>
+
+</ul>
+
+</section>
+<section>
+
+<ul>
+<li><p>
+Have a constructor with exactly 1 parameter: <code>PluginTool</code>
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-java"><span style="color: #268bd2; font-weight: bold;">public</span> <span style="color: #d75fd7; font-weight: bold;">MyPlugin</span><span style="color: #268bd2;">(</span><span style="color: #df005f; font-weight: bold;">PluginTool</span> <span style="color: #8787d7;">tool</span><span style="color: #268bd2;">)</span> <span style="color: #268bd2;">{</span> ... <span style="color: #268bd2;">}</span>
+</pre>
+</div></li>
+
+</ul>
+
+<ul>
+<li class="fragment appear">Register provided service implementations in <code>constructor</code></li>
+<li class="fragment appear">In <code>init()</code>
+<ul>
+<li>Retrieve services consumed</li>
+<li>Create actions</li>
+
+</ul></li>
+<li class="fragment appear">In <code>dispose()</code>
+<ul>
+<li>Release resources</li>
+
+</ul></li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-7-6">
+<h3 id="7-6"><span class="section-number-3">7.6</span> Useful interfaces</h3>
+<ul>
+<li><code>OptionsChangeListener</code> — to receive notification when a configuration option
+is changed by the user</li>
+<li><code>FrontEndable</code> — marks this Plugin as being suitable for inclusion in the
+FrontEnd tool</li>
+<li><code>FrontEndOnly</code> — marks this Plugin as FrontEnd only, not usable in CodeBrowser
+or other tools</li>
+<li><code>ProgramaticUseOnly</code> — marks this Plugin as special and not for user
+configuration</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-7-7">
+<h3 id="7-7"><span class="section-number-3">7.7</span> <code>ProgramPlugin</code></h3>
+<p>
+Extends <code>Plugin</code> class
+</p>
+
+<p>
+Base class to handle common program events:
+</p>
+<ul>
+<li>Program Open/Close</li>
+<li>Program Location</li>
+<li>Program Selection</li>
+<li>Program Highlight</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-8">
+<h2 id="8"><span class="section-number-2">8</span> GUI</h2>
+<div class="outline-text-2" id="text-8">
+</div>
+</section>
+</section>
+<section>
+<section id="slide-8-1">
+<h3 id="8-1"><span class="section-number-3">8.1</span> Docking Windows</h3>
+<ul>
+<li>Title bar</li>
+<li>Local toolbar</li>
+<li>Menu icon</li>
+<li>Close button</li>
+<li>Mouse cursor provides feedback</li>
+<li>Components can be stacked, docked or floating</li>
+
+</ul>
+
+<p>
+Allow users to customize the layout of components within a tool
+</p>
+
+<p>
+<i>Not used GUI toolkit</i>
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-8-2">
+<h3 id="8-2"><span class="section-number-3">8.2</span> Component Provider</h3>
+<p>
+Managed GUI component in the tool
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-java">myComponent = <span style="color: #268bd2; font-weight: bold;">new</span> <span style="color: #df005f; font-weight: bold;">MyComponent</span><span style="color: #268bd2;">(</span>...<span style="color: #268bd2;">)</span>;
+tool.addComponent<span style="color: #268bd2;">(</span><span style="color: #268bd2; font-weight: bold;">this</span>, myComponent<span style="color: #268bd2;">)</span>;
+</pre>
+</div>
+
+<ul>
+<li>Permanent — are always available in Window menu and closing just hides them
+(e.g., Listing)</li>
+<li>Transient — created on the fly and when closed are destroyed and removed from
+Window menu (e.g., Search Results)</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-8-3">
+<h3 id="8-3"><span class="section-number-3">8.3</span> Custom Components</h3>
+<ul>
+<li><code>GTable</code></li>
+<li><code>GTree</code></li>
+<li><code>GComboBox</code></li>
+<li>etc</li>
+
+</ul>
+
+<p>
+Provides:
+</p>
+<ul>
+<li>Custom filtering</li>
+<li>Event handling</li>
+<li>Threaded models</li>
+<li>Navigation</li>
+<li>Look-and-feel</li>
+
+</ul>
+
+</section>
+<section id="slide-8-3-1">
+<h4 id="8-3-1"><span class="section-number-4">8.3.1</span> Tables</h4>
+<p>
+<code>GTable</code>
+</p>
+
+<ul>
+<li>Filters</li>
+<li>Columns</li>
+<li>Export to CSV</li>
+
+</ul>
+
+</section>
+<section id="slide-8-3-2">
+<h4 id="8-3-2"><span class="section-number-4">8.3.2</span> Trees</h4>
+<p>
+<code>GTree</code>
+</p>
+
+<ul>
+<li>Filters</li>
+<li>Lazy loading to support large data</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-8-4">
+<h3 id="8-4"><span class="section-number-3">8.4</span> Actions</h3>
+<ul>
+<li>Right mouse actions are context sensitive</li>
+<li>List of actions that appear will change based on where the cursor is located</li>
+<li>User can assign/override key bindings (<code>F4</code>)</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-9">
+<h2 id="9"><span class="section-number-2">9</span> Binary Formats</h2>
+<ul>
+<li>ELF</li>
+<li>PE</li>
+<li>Mach-O</li>
+<li>etc</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-9-1">
+<h3 id="9-1"><span class="section-number-3">9.1</span> New Binary Format</h3>
+<p>
+What is needed for a new format?
+</p>
+
+<ul>
+<li>Data structure to parse the format</li>
+<li>Language, if not currently supported</li>
+<li>Loader for Ghidra's importer</li>
+<li>Analyzers to annotate the binary format</li>
+
+</ul>
+
+<p>
+Use Skeleton extension
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-9-2">
+<h3 id="9-2"><span class="section-number-3">9.2</span> Sleigh / PCode</h3>
+<ul>
+<li>Used to disassemble binary to assemble</li>
+<li>Used to decompile assembly into C</li>
+<li>Decompiler optimizes</li>
+<li>Performs data type propagation</li>
+<li>etc</li>
+
+</ul>
+
+<p>
+<code>${GHIDRA_HOME}/Ghidra/Processors</code>
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-9-3">
+<h3 id="9-3"><span class="section-number-3">9.3</span> Loaders</h3>
+<p>
+Must implement <code>Loader</code> interface (all Loader Classes <b>MUST END IN</b> "<i>Loader</i>")
+</p>
+
+<p>
+Consider <code>AbstractProgramLoader</code> or <code>AbstractLibraryLoader</code>
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-java"><span style="color: #268bd2; font-weight: bold;">public</span> <span style="color: #268bd2; font-weight: bold;">class</span> <span style="color: #df005f; font-weight: bold;">SkeletonLoader</span> <span style="color: #268bd2; font-weight: bold;">implements</span> <span style="color: #df005f; font-weight: bold;">Loader</span> <span style="color: #268bd2;">{</span>
+  <span style="color: #df005f; font-weight: bold;">Collection</span><span style="color: #d75fd7;">&lt;</span><span style="color: #df005f; font-weight: bold;">LoadSpec</span><span style="color: #d75fd7;">&gt;</span> <span style="color: #d75fd7; font-weight: bold;">findSupportedLoadSpecs</span><span style="color: #d75fd7;">(</span>...<span style="color: #d75fd7;">)</span>;
+  <span style="color: #df005f; font-weight: bold;">List</span><span style="color: #d75fd7;">&lt;</span><span style="color: #df005f; font-weight: bold;">DomainObject</span><span style="color: #d75fd7;">&gt;</span> <span style="color: #d75fd7; font-weight: bold;">load</span><span style="color: #d75fd7;">(</span>...<span style="color: #d75fd7;">)</span>;
+  ...
+<span style="color: #268bd2;">}</span>
+</pre>
+</div>
+
+
+</section>
+<section id="slide-9-3-1">
+<h4 id="9-3-1"><span class="section-number-4">9.3.1</span> <code>.opinion</code> files</h4>
+<p>
+Must update the <code>.opinion</code> file for each processor supported by the format
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-xml">&lt;<span style="color: #d75fd7; font-weight: bold;">opinions</span>&gt;
+  &lt;<span style="color: #d75fd7; font-weight: bold;">constraint</span> <span style="color: #8787d7;">loader</span>=<span style="color: #2aa198;">"Skeleton"</span> <span style="color: #8787d7;">compilerSpecID</span>=<span style="color: #2aa198;">"default"</span>&gt;
+    &lt;<span style="color: #d75fd7; font-weight: bold;">constraint</span> <span style="color: #8787d7;">primary</span>=<span style="color: #2aa198;">"40"</span> <span style="color: #8787d7;">secondary</span>=<span style="color: #2aa198;">"123"</span>
+      <span style="color: #8787d7;">processor</span>=<span style="color: #2aa198;">"Skel"</span> <span style="color: #8787d7;">size</span>=<span style="color: #2aa198;">"16"</span> <span style="color: #8787d7;">variant</span>=<span style="color: #2aa198;">"default"</span> /&gt;
+  &lt;/<span style="color: #d75fd7; font-weight: bold;">constraint</span>&gt;
+  &lt;<span style="color: #d75fd7; font-weight: bold;">constraint</span> <span style="color: #8787d7;">loader</span>=<span style="color: #2aa198;">"MS Common Object File Format (COFF)"</span>
+    <span style="color: #8787d7;">compilerSpecID</span>=<span style="color: #2aa198;">"default"</span>&gt;
+    &lt;<span style="color: #d75fd7; font-weight: bold;">constraint</span> <span style="color: #8787d7;">primary</span>=<span style="color: #2aa198;">"61"</span> <span style="color: #8787d7;">processor</span>=<span style="color: #2aa198;">"Skel"</span> <span style="color: #8787d7;">size</span>=<span style="color: #2aa198;">"16"</span>
+      <span style="color: #8787d7;">variant</span>=<span style="color: #2aa198;">"default"</span> /&gt;
+  &lt;/<span style="color: #d75fd7; font-weight: bold;">constraint</span>&gt;
+&lt;/<span style="color: #d75fd7; font-weight: bold;">opinions</span>&gt;
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-9-4">
+<h3 id="9-4"><span class="section-number-3">9.4</span> Analyzers</h3>
+<p>
+Must implement <code>Analyzer</code> interface (all Analyzer Classes <b>MUST END IN</b>
+"<i>Analyzer</i>")
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-java"><span style="color: #008787; background-color: #262626;">// </span><span style="color: #008787; background-color: #262626;">Display name, input type, priority</span>
+<span style="color: #df005f; font-weight: bold;">String</span> <span style="color: #d75fd7; font-weight: bold;">getName</span><span style="color: #268bd2;">()</span>;
+<span style="color: #df005f; font-weight: bold;">AnalyzerType</span> <span style="color: #d75fd7; font-weight: bold;">getAnalysisType</span><span style="color: #268bd2;">()</span>;
+<span style="color: #df005f; font-weight: bold;">AnalysisPriority</span> <span style="color: #d75fd7; font-weight: bold;">getPriority</span><span style="color: #268bd2;">()</span>;
+
+<span style="color: #008787; background-color: #262626;">// </span><span style="color: #008787; background-color: #262626;">Called for changes to analyzers inputs</span>
+<span style="color: #df005f; font-weight: bold;">boolean</span> <span style="color: #d75fd7; font-weight: bold;">added</span><span style="color: #268bd2;">(</span>...<span style="color: #268bd2;">)</span>;
+<span style="color: #df005f; font-weight: bold;">boolean</span> <span style="color: #d75fd7; font-weight: bold;">removed</span><span style="color: #268bd2;">(</span>...<span style="color: #268bd2;">)</span>;
+
+<span style="color: #008787; background-color: #262626;">// </span><span style="color: #008787; background-color: #262626;">Register and react to user options</span>
+<span style="color: #df005f; font-weight: bold;">void</span> <span style="color: #d75fd7; font-weight: bold;">registerOptions</span><span style="color: #268bd2;">(</span>...<span style="color: #268bd2;">)</span>;
+<span style="color: #df005f; font-weight: bold;">void</span> <span style="color: #d75fd7; font-weight: bold;">optionsChanged</span><span style="color: #268bd2;">(</span>...<span style="color: #268bd2;">)</span>;
+
+...
+</pre>
+</div>
+
+</section>
+<section id="slide-9-4-1">
+<h4 id="9-4-1"><span class="section-number-4">9.4.1</span> <code>AnalyzerType</code></h4>
+<ul>
+<li>BYTES — analyze anywhere defined bytes are present (block of memory added)</li>
+<li>INSTRUCTIONS — analyze anywhere instructions are defined</li>
+<li>FUNCTIONS — analyze where a function is defined</li>
+<li>FUNCTION-MODIFIERS — analyze functions whose modifiers have changed</li>
+<li>FUNCTION-SIGNATURES — analyze functions whose signatures have changed</li>
+<li>DATA — analyze where data has been defined</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-10">
+<h2 id="10"><span class="section-number-2">10</span> File System Loader</h2>
+<p>
+Provides an alternative importer, which allows importing many programs from a
+single archive or image
+</p>
+
+<ul>
+<li>Drills down into file systems, including nested file systems</li>
+<li>Extract files</li>
+<li>Import binaries</li>
+<li>Perform static analysis</li>
+<li>View as text</li>
+<li>View as image (i.e., picture)</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-10-1">
+<h3 id="10-1"><span class="section-number-3">10.1</span> Examples</h3>
+<div class="column" style="float:left; width: 50%">
+<ul>
+<li>Android XML</li>
+<li>Android APK</li>
+<li>Apple 8900</li>
+<li>GZIP</li>
+<li>YAFFS2</li>
+<li>Android DEX to JAR</li>
+<li>7Zip</li>
+
+</ul>
+</div>
+
+<div class="column" style="float:left; width: 50%">
+<ul>
+<li>COFF Archive</li>
+<li>CPIO</li>
+<li>Crushed PNG</li>
+<li>iOS Disk Image (DMG)</li>
+<li>iOS DYLD Cache Version 1</li>
+<li>etc</li>
+
+</ul>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-10-2">
+<h3 id="10-2"><span class="section-number-3">10.2</span> Implementation</h3>
+<p>
+Extensible using <code>GFileSystem</code> interface (all GFileSystem Sub-classes <b>MUST END
+IN</b> "<i>FileSystem</i>")
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-java"><span style="color: #d75fd7;">@FileSystemInfo</span><span style="color: #268bd2;">(</span>type = <span style="color: #2aa198;">"ext4"</span>,
+                description = <span style="color: #2aa198;">"EXT4"</span>,
+                factory = Ext4FileSystemFactory.<span style="color: #268bd2; font-weight: bold;">class</span><span style="color: #268bd2;">)</span>
+<span style="color: #268bd2; font-weight: bold;">public</span> <span style="color: #268bd2; font-weight: bold;">class</span> <span style="color: #df005f; font-weight: bold;">Ext4FileSystem</span> <span style="color: #268bd2; font-weight: bold;">implements</span> <span style="color: #df005f; font-weight: bold;">GFileSystem</span> <span style="color: #268bd2;">{</span>
+  ...
+<span style="color: #268bd2;">}</span>
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-11">
+<h2 id="11"><span class="section-number-2">11</span> Contributing to Ghidra</h2>
+<ul>
+<li>Search in the sources, read issues (don't do double work)</li>
+<li>Ask a question in
+<a href="https://t.me/GhidraRE">Telegram</a>/<a href="https://matrix.to/#/%23ghidra:matrix.org">Matrix</a>/<a href="https://discord.gg/S4tQnUB">Discord</a></li>
+<li>Write an issue</li>
+<li>Create a PR</li>
+<li>Wait&#x2026;</li>
+
+</ul>
+</section>
+</section>
+</div>
+</div>
+<script src="./reveal.js/js/reveal.js"></script>
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+
+controls: true,
+progress: true,
+history: true,
+center: true,
+slideNumber: 'c/t',
+rollingLinks: false,
+keyboard: true,
+mouseWheel: false,
+fragmentInURL: false,
+hashOneBasedIndex: false,
+pdfSeparateFragments: true,
+
+overview: true,
+
+theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+transition: Reveal.getQueryHash().transition || 'linear', // see README of reveal.js for options
+transitionSpeed: 'default',
+
+// Optional libraries used to extend reveal.js
+dependencies: [
+ { src: './reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: './reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: './reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+ { src: './reveal.js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; } },
+ { src: './reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } }]
+
+});
+</script>
+</body>
+</html>
