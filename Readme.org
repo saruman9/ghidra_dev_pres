@@ -207,7 +207,7 @@ Point to the directory of sources of Ghidra, when it will be needed
 
 #+REVEAL: split
 
-Skip Gralde's tasks for faster building (use =-x= argument):
+Skip Gradle's tasks for faster building (use =-x= argument):
 
 - =createJavadocs=
 - =createJsondocs=
@@ -365,7 +365,7 @@ Extensible components:
 
 =build.gradle=
 
-Gralde's task. No need for changes
+Gradle's task. No need for changes
 
 #+REVEAL: split
 
